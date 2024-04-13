@@ -25,13 +25,6 @@ RUN docker-php-ext-install \
 	
 	
 RUN apk add mysql-client
-	
-ENV PHPREDIS_VERSION 5.3.5
-
-RUN mkdir -p /usr/src/php/ext/redis \
-    && curl -L https://github.com/phpredis/phpredis/archive/$PHPREDIS_VERSION.tar.gz | tar xvz -C /usr/src/php/ext/redis --strip 1 \
-    && echo 'redis' >> /usr/src/php-available-exts \
-    && docker-php-ext-install redis
     
 RUN curl -sS https://getcomposer.org/installer | php ;mv composer.phar /usr/local/bin/composer;
 RUN composer global require laravel/installer
