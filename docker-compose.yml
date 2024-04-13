@@ -18,24 +18,23 @@ services:
     php-fpm:
         container_name: ${PROJECT_NAME}_php-fpm
         build: ./docker-assets/php
-        links:
-            - mysql
+        depends_on:
+            - db
         volumes:
             - ./src:/src
         working_dir: /src
         
     # database
-    mysql:
-        container_name: ${PROJECT_NAME}_mysql
-        image: mysql
-        volumes: 
-            - ./database:/var/lib/mysql
+    db:
+        image: mariadb
+        restart: always
+        volumes:
+            - ./tpm/db:/var/lib/mysql
+        environment:
+            MYSQL_ROOT_PASSWORD: password
+            MYSQL_DATABASE: mydatabase
+            MYSQL_USER: user
+            MYSQL_PASSWORD: password
         ports:
             - 3306:3306
-        command: --default-authentication-plugin=mysql_native_password
-        restart: always
-        environment:
-            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-            MYSQL_DATABASE: ${MYSQL_DATABASE}
-            MYSQL_USER: ${MYSQL_USER}
-            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+        container_name: laravel_db_docker
